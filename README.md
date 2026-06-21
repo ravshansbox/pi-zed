@@ -2,6 +2,8 @@
 
 pi extension that reads zed's local sqlite state and exposes the active file, open files, and selected lines to pi.
 
+![pi-zed widget](docs/widget.png)
+
 ## install
 
 ```sh
