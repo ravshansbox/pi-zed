@@ -1,0 +1,27 @@
+{
+  "name": "pi-zed",
+  "version": "0.1.0",
+  "description": "pi extension that reads zed's open files and selected lines and injects them into prompts.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": ["pi-package", "pi-extension", "zed"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravshansbox/pi-zed.git"
+  },
+  "files": [
+    "index.ts",
+    "src"
+  ],
+  "pi": {
+    "extensions": ["./index.ts"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}
