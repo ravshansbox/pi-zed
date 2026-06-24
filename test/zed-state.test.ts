@@ -6,9 +6,11 @@ import {
   formatWidgetLines,
   offsetToPosition,
   parseZedState,
-} from "../src/zed-state.js";
+  type ActiveEditorRow,
+  type OpenFileRow,
+} from "../src/zed-state.ts";
 
-const activeEditorRows = [
+const activeEditorRows: ActiveEditorRow[] = [
   {
     item_kind: "Editor",
     editor_id: 7,
@@ -20,7 +22,7 @@ const activeEditorRows = [
   },
 ];
 
-const openFileRows = [
+const openFileRows: OpenFileRow[] = [
   { buffer_path: "/repo/src/main.ts", active: 1, pane_active: 1, item_kind: "Editor" },
   { buffer_path: "/repo/src/other.ts", active: 0, pane_active: 1, item_kind: "Editor" },
 ];
