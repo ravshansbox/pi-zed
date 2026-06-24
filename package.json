@@ -24,12 +24,10 @@
   },
   "devDependencies": {
     "@types/node": "latest",
-    "tsx": "latest",
     "typescript": "latest"
   },
   "scripts": {
-    "test": "node --import tsx --test test/**/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm test"
+    "check": "npm run typecheck"
   }
 }

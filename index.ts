@@ -1,7 +1,7 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
-import { buildPromptContext, formatWidgetLines, readZedState } from "./src/zed-state.js";
+import { buildPromptContext, formatWidgetLines, readZedState } from "./src/zed-state.ts";
 
 const widgetId = "pi-zed";
 const refreshMs = 1000;
@@ -9,7 +9,7 @@ const refreshMs = 1000;
 export default function (pi: ExtensionAPI) {
   let timer: ReturnType<typeof setInterval> | undefined;
 
-  async function refreshWidget(ctx: { cwd: string; ui: { setWidget: (id: string, content: unknown, options?: unknown) => void } }) {
+  async function refreshWidget(ctx: Pick<ExtensionContext, "cwd" | "ui">): Promise<void> {
     const state = await readZedState({ cwd: ctx.cwd });
     const lines = formatWidgetLines(state);
     ctx.ui.setWidget(widgetId, (_tui, theme) => {
