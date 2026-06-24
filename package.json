@@ -23,8 +23,8 @@
     "typebox": "*"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "typescript": "latest"
+    "@types/node": "^24.0.13",
+    "typescript": "^6.0.3"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
