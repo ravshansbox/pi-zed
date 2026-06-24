@@ -12,7 +12,8 @@
   "files": [
     "index.ts",
     "src",
-    "docs"
+    "docs",
+    "LICENSE"
   ],
   "pi": {
     "extensions": ["./index.ts"]
