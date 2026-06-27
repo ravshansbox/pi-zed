@@ -112,7 +112,7 @@ export async function readZedState(options: ReadZedStateOptions = {}): Promise<Z
 
 export function parseZedState({ cwd, activeEditorRows, openFileRows, selectionRows }: ParseZedStateInput): ZedState {
   const active = chooseActiveEditor(activeEditorRows, cwd);
-  if (!active) return emptyState("no matching zed workspace");
+  if (!active) return emptyState("no matching workspace");
   if (active.item_kind !== "Editor" || !active.buffer_path) {
     return {
       activeFile: undefined,
