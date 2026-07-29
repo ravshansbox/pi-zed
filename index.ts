@@ -11,6 +11,11 @@ export default function (pi: ExtensionAPI) {
 
   async function refreshWidget(ctx: Pick<ExtensionContext, "cwd" | "ui">): Promise<void> {
     const state = await readZedState({ cwd: ctx.cwd });
+    if (state.unavailableReason === "no matching workspace") {
+      ctx.ui.setWidget(widgetId, undefined);
+      return;
+    }
+
     const lines = formatWidgetLines(state);
     ctx.ui.setWidget(widgetId, (_tui, theme) => {
       const body = lines.map((line) => line.map((segment) => theme.fg(segment.role, segment.text)).join("")).join("\n");
