@@ -7,11 +7,20 @@ import { Type } from 'typebox';
 import {
   buildPromptContext,
   formatWidgetLines,
+  hasZedContext,
   readZedState,
+  type ZedState,
 } from './src/zed-state.ts';
 
 const widgetId = 'pi-zed';
 const refreshMs = 1000;
+
+function stateResult(state: ZedState, available: string) {
+  const text = state.unavailableReason
+    ? `zed unavailable: ${state.unavailableReason}`
+    : available;
+  return { content: [{ type: 'text' as const, text }], details: state };
+}
 
 export default function (pi: ExtensionAPI) {
   let timer: ReturnType<typeof setInterval> | undefined;
@@ -20,12 +29,12 @@ export default function (pi: ExtensionAPI) {
     ctx: Pick<ExtensionContext, 'cwd' | 'ui'>,
   ): Promise<void> {
     const state = await readZedState({ cwd: ctx.cwd });
-    if (state.unavailableReason === 'no matching workspace') {
+    const lines = formatWidgetLines(state);
+    if (lines.length === 0) {
       ctx.ui.setWidget(widgetId, undefined);
       return;
     }
 
-    const lines = formatWidgetLines(state);
     ctx.ui.setWidget(
       widgetId,
       (_tui, theme) => {
@@ -56,7 +65,7 @@ export default function (pi: ExtensionAPI) {
     }, refreshMs);
   });
 
-  pi.on('session_shutdown', async (_event, ctx) => {
+  pi.on('session_shutdown', (_event, ctx) => {
     if (timer) clearInterval(timer);
     timer = undefined;
     ctx.ui.setWidget(widgetId, undefined);
@@ -65,9 +74,13 @@ export default function (pi: ExtensionAPI) {
   pi.on('before_agent_start', async (_event, ctx) => {
     const state = await readZedState({ cwd: ctx.cwd });
     await refreshWidget(ctx);
-    const context = buildPromptContext(state);
+    if (!hasZedContext(state)) return;
     return {
-      message: { customType: 'zed-context', content: context, display: false },
+      message: {
+        customType: 'zed-context',
+        content: buildPromptContext(state),
+        display: false,
+      },
     };
   });
 
@@ -84,10 +97,7 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
       const state = await readZedState({ cwd: ctx.cwd });
-      return {
-        content: [{ type: 'text', text: buildPromptContext(state) }],
-        details: state,
-      };
+      return stateResult(state, buildPromptContext(state));
     },
   });
 
@@ -103,19 +113,12 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
       const state = await readZedState({ cwd: ctx.cwd });
-      const text = state.unavailableReason
-        ? `zed unavailable: ${state.unavailableReason}`
-        : state.openFiles.length > 0
+      return stateResult(
+        state,
+        state.openFiles.length > 0
           ? state.openFiles.join('\n')
-          : 'no open zed files found.';
-      return {
-        content: [{ type: 'text', text }],
-        details: {
-          activeFile: state.activeFile,
-          openFiles: state.openFiles,
-          unavailableReason: state.unavailableReason,
-        },
-      };
+          : 'no open zed files found.',
+      );
     },
   });
 
@@ -132,19 +135,12 @@ export default function (pi: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
       const state = await readZedState({ cwd: ctx.cwd });
-      const text = state.unavailableReason
-        ? `zed unavailable: ${state.unavailableReason}`
-        : state.selections.length > 0
+      return stateResult(
+        state,
+        state.selections.length > 0
           ? buildPromptContext({ ...state, openFiles: [] })
-          : 'no selected zed lines found.';
-      return {
-        content: [{ type: 'text', text }],
-        details: {
-          activeFile: state.activeFile,
-          selections: state.selections,
-          unavailableReason: state.unavailableReason,
-        },
-      };
+          : 'no selected zed lines found.',
+      );
     },
   });
 }
