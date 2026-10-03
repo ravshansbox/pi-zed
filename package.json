@@ -1,6 +1,6 @@
 {
   "name": "@ravshansbox/pi-zed",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "pi extension that reads zed's open files and selected lines and injects them into prompts.",
   "license": "MIT",
   "type": "module",
