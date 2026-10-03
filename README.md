@@ -1,39 +1,36 @@
 # pi-zed
 
-pi extension that reads zed's local sqlite state and exposes the active file, open files, and selected lines to pi.
+Zed editor context extension for pi.
 
 ![pi-zed widget](docs/widget.png)
 
-## install
+## Install
 
-```sh
+```bash
 pi install git:github.com/ravshansbox/pi-zed
 ```
 
-or try it for one run without installing:
+## Usage
 
-```sh
-pi -e git:github.com/ravshansbox/pi-zed
-```
+Pi loads the extension from `./index.ts`. It reads Zed's local SQLite state and:
 
-for local development:
-
-```sh
-pi -e ~/Projects/pi-zed/index.ts
-```
-
-the extension:
-
-- shows a compact muted widget with the current zed active file, selected line range, and count of other open files
+- shows a compact muted widget with the current Zed active file, selected line range, and count of other open files
 - injects active file, open files, selected line numbers, and selected text into each pi prompt as hidden untrusted context
 - registers `zed_current_context`, `zed_open_files`, and `zed_selected_lines`
 
-## database discovery
+It requires the `sqlite3` CLI.
 
-set `PI_ZED_DB` to override the zed database path. if unset, the extension tries:
+## Configuration
+
+Set `PI_ZED_DB` to override the Zed database path. If unset, the extension tries:
 
 - `$OPENCODE_ZED_DB`
 - `~/Library/Application Support/Zed/db/0-stable/db.sqlite`
 - `~/.local/share/zed/db/0-stable/db.sqlite`
 
-requires the `sqlite3` cli.
+## Development
+
+```bash
+npm install
+npm run check
+```
