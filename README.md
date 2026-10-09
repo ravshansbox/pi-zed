@@ -7,7 +7,7 @@ Zed editor context extension for pi.
 ## Install
 
 ```bash
-pi install git:github.com/ravshansbox/pi-zed
+pi install npm:@ravshansbox/pi-zed
 ```
 
 ## Usage
