@@ -10,6 +10,8 @@ Zed editor context extension for pi.
 pi install npm:@ravshansbox/pi-zed
 ```
 
+Add `-l` to install it in project settings.
+
 ## Usage
 
 Pi loads the extension from `./index.ts`. It reads Zed's local SQLite state and:
