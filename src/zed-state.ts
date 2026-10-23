@@ -75,11 +75,7 @@ function resolveZedDbPath(): string | undefined {
   const candidates: string[] = [
     process.env['PI_ZED_DB'],
     process.env['OPENCODE_ZED_DB'],
-    // fixed literal segments under homedir()
-    // pi-lens-ignore: ts-path-traversal
     path.join(homedir(), 'Library', 'Application Support', 'Zed', 'db', '0-stable', 'db.sqlite'),
-    // fixed literal segments under homedir()
-    // pi-lens-ignore: ts-path-traversal
     path.join(homedir(), '.local', 'share', 'zed', 'db', '0-stable', 'db.sqlite'),
   ].filter(
     (candidate): candidate is string => typeof candidate === 'string' && candidate.length > 0,
@@ -276,8 +272,6 @@ function chooseActiveEditor(rows: ActiveEditorRow[], cwd: string): ActiveEditorR
 function scoreWorkspace(workspacePaths: string | undefined, cwd: string): number {
   return parseWorkspacePaths(workspacePaths).reduce((score, workspacePath) => {
     if (!pathContains(workspacePath, cwd)) return score;
-    // path arithmetic only, no filesystem I/O
-    // pi-lens-ignore: ts-path-traversal
     return Math.max(score, path.resolve(workspacePath).length);
   }, 0);
 }
@@ -361,8 +355,6 @@ function comparePositions(left: Position, right: Position): number {
 }
 
 function pathContains(parent: string, child: string): boolean {
-  // path arithmetic only, no filesystem I/O
-  // pi-lens-ignore: ts-path-traversal
   const relative = path.relative(path.resolve(parent), path.resolve(child));
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
