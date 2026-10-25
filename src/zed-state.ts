@@ -356,7 +356,10 @@ function comparePositions(left: Position, right: Position): number {
 
 function pathContains(parent: string, child: string): boolean {
   const relative = path.relative(path.resolve(parent), path.resolve(child));
-  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+  return (
+    relative === '' ||
+    (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+  );
 }
 
 function emptyState(unavailableReason: string): ZedState {
