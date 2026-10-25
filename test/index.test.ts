@@ -85,3 +85,28 @@ test('shows the widget in the statusline colour', async (t) => {
 
   assert.match(rendered, /^<dim>zed: .*<\/dim>$/);
 });
+
+test('shows the widget below the editor', async (t) => {
+  process.env['PI_ZED_DB'] = createZedDb({
+    workspacePath: '/work/project',
+    bufferPath: '/work/project/a.ts',
+    contents: 'one\n',
+  });
+  t.after(() => delete process.env['PI_ZED_DB']);
+
+  const placements: unknown[] = [];
+  const ctx = {
+    cwd: '/work/project',
+    ui: {
+      setWidget: (_id: string, factory: unknown, options?: { placement?: string }) => {
+        if (typeof factory === 'function') placements.push(options?.placement);
+      },
+    },
+  };
+
+  const handlers = load();
+  await handlers.get('session_start')?.({}, ctx);
+  await handlers.get('session_shutdown')?.({}, ctx);
+
+  assert.deepEqual(placements, ['belowEditor']);
+});
