@@ -19,9 +19,11 @@ function stateResult(state: ZedState, available: string) {
 
 export default function (pi: ExtensionAPI) {
   let timer: ReturnType<typeof setInterval> | undefined;
+  let active = false;
 
   async function refreshWidget(ctx: Pick<ExtensionContext, 'cwd' | 'ui'>): Promise<void> {
     const state = await readZedState({ cwd: ctx.cwd });
+    if (!active) return;
     const lines = formatWidgetLines(state);
     if (lines.length === 0) {
       ctx.ui.setWidget(widgetId, undefined);
@@ -41,9 +43,12 @@ export default function (pi: ExtensionAPI) {
   }
 
   pi.on('session_start', async (_event, ctx) => {
+    active = true;
     await refreshWidget(ctx);
+    if (!active) return;
     timer = setInterval(() => {
       refreshWidget(ctx).catch(() => {
+        if (!active) return;
         ctx.ui.setWidget(
           widgetId,
           (_tui, theme) => new Text(theme.fg('muted', 'zed: unable to refresh'), 0, 0),
@@ -54,6 +59,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on('session_shutdown', (_event, ctx) => {
+    active = false;
     if (timer) clearInterval(timer);
     timer = undefined;
     ctx.ui.setWidget(widgetId, undefined);
