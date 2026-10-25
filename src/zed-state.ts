@@ -42,7 +42,7 @@ export interface BuildPromptContextOptions {
   maxSelectedTextBytes?: number;
 }
 
-type WidgetRole = 'muted';
+type WidgetRole = 'dim';
 
 export interface WidgetSegment {
   role: WidgetRole;
@@ -171,7 +171,7 @@ export function formatWidgetLines(state: ZedState): WidgetSegment[][] {
     : `zed: ${activeFile}`;
   const otherFileCount = state.openFiles.filter((file) => file !== state.activeFile).length;
   const suffix = formatOtherFileCount(otherFileCount);
-  return [[{ role: 'muted', text: `${baseText}${suffix}` }]];
+  return [[{ role: 'dim', text: `${baseText}${suffix}` }]];
 }
 
 function formatOtherFileCount(count: number): string {

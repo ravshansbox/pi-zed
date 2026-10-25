@@ -58,3 +58,30 @@ test('does not touch a stale context after session shutdown', async (t) => {
   assert.deepEqual(rejections, []);
   assert.deepEqual(widgetCallsAfterShutdown, []);
 });
+
+test('shows the widget in the statusline colour', async (t) => {
+  process.env['PI_ZED_DB'] = createZedDb({
+    workspacePath: '/work/project',
+    bufferPath: '/work/project/a.ts',
+    contents: 'one\n',
+  });
+  t.after(() => delete process.env['PI_ZED_DB']);
+
+  let rendered = '';
+  const ctx = {
+    cwd: '/work/project',
+    ui: {
+      setWidget: (_id: string, factory: unknown) => {
+        if (typeof factory !== 'function') return;
+        const theme = { fg: (role: string, text: string) => `<${role}>${text}</${role}>` };
+        rendered = factory({}, theme).render(80).join('\n').trimEnd();
+      },
+    },
+  };
+
+  const handlers = load();
+  await handlers.get('session_start')?.({}, ctx);
+  await handlers.get('session_shutdown')?.({}, ctx);
+
+  assert.match(rendered, /^<dim>zed: .*<\/dim>$/);
+});

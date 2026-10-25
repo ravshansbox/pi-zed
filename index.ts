@@ -51,7 +51,7 @@ export default function (pi: ExtensionAPI) {
         if (!active) return;
         ctx.ui.setWidget(
           widgetId,
-          (_tui, theme) => new Text(theme.fg('muted', 'zed: unable to refresh'), 0, 0),
+          (_tui, theme) => new Text(theme.fg('dim', 'zed: unable to refresh'), 0, 0),
           { placement: 'aboveEditor' },
         );
       });
