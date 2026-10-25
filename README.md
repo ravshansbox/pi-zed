@@ -16,7 +16,7 @@ Add `-l` to install it in project settings.
 
 Pi loads the extension from `./index.ts`. It reads Zed's local SQLite state and:
 
-- shows a compact dim widget below the editor, in the same colour as the pi statusline, with the current Zed active file, selected line range, and count of other open files
+- shows a compact dim widget above the editor, in the same colour as the pi statusline, with the current Zed active file, selected line range, and count of other open files
 - injects active file, open files, selected line numbers, and selected text into each pi prompt as hidden untrusted context
 - registers `zed_current_context`, `zed_open_files`, and `zed_selected_lines`
 

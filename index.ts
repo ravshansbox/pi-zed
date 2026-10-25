@@ -38,7 +38,7 @@ export default function (pi: ExtensionAPI) {
           .join('\n');
         return new Text(body, 0, 0);
       },
-      { placement: 'belowEditor' },
+      { placement: 'aboveEditor' },
     );
   }
 
@@ -52,7 +52,7 @@ export default function (pi: ExtensionAPI) {
         ctx.ui.setWidget(
           widgetId,
           (_tui, theme) => new Text(theme.fg('dim', 'zed: unable to refresh'), 0, 0),
-          { placement: 'belowEditor' },
+          { placement: 'aboveEditor' },
         );
       });
     }, refreshMs);
