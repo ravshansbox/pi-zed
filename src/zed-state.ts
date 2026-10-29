@@ -306,7 +306,7 @@ function uniqueOpenFiles(rows: OpenFileRow[]): string[] {
 function readFileIfPossible(filePath: string): string | undefined {
   try {
     if (!existsSync(filePath)) return undefined;
-    return readFileSync(filePath, 'utf8');
+    return readFileSync(filePath, 'utf8').replace(/\r\n|\r/g, '\n');
   } catch {
     return undefined;
   }
